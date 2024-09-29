@@ -13,13 +13,13 @@ const file = 'beepers.json';
 // פונקציה לקבלת כל הביפרים
 export const getAllBeepers = (req: Request, res: Response) => {
     jsonfile.readFile(file, (err, obj: Beeper[]) => {
-      if (!err) {
-        res.status(500).send(err)
-      } else {
-        res.send(obj);
-      }
+        if (!err) {
+            res.status(500).send(err)
+        } else {
+            res.send(obj);
+        }
     });
-  };
+};
 
 // פונקציה ליצירת ביפר חדש
 export const createBeeper = (req: Request, res: Response) => {
@@ -59,6 +59,31 @@ export const getBeeperById = (req: Request, res: Response) => {
             const beeper = obj.find(b => b.id === beeperId);
             if (beeper) {
                 res.send(beeper);
+            } else {
+                res.status(404).send('Beeper not found');
+            }
+        }
+    });
+};
+
+// פונקציה למחיקה של ביפר
+export const deleteBeeper = (req: Request, res: Response) => {
+    const beeperId = parseInt(req.params.id);
+
+    jsonfile.readFile(file, (err, obj: Beeper[]) => {
+        if (err) {
+            res.status(500).send(err);
+        } else {
+            const index = obj.findIndex(b => b.id === beeperId);
+            if (index !== -1) {
+                obj.splice(index, 1);
+                jsonfile.writeFile(file, obj, (err) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    } else {
+                        res.status(204).send();
+                    }
+                });
             } else {
                 res.status(404).send('Beeper not found');
             }
