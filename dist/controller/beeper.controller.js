@@ -3,7 +3,7 @@ var __importDefault = (this && this.__importDefault) || function (mod) {
     return (mod && mod.__esModule) ? mod : { "default": mod };
 };
 Object.defineProperty(exports, "__esModule", { value: true });
-exports.getBeeperById = exports.createBeeper = exports.getAllBeepers = void 0;
+exports.deleteBeeper = exports.getBeeperById = exports.createBeeper = exports.getAllBeepers = void 0;
 const jsonfile_1 = __importDefault(require("jsonfile"));
 const file = 'beepers.json';
 // export async function postBeeperById(req: Request, res: Response): Promise<void> {
@@ -70,3 +70,30 @@ const getBeeperById = (req, res) => {
     });
 };
 exports.getBeeperById = getBeeperById;
+// פונקציה למחיקה של ביפר
+const deleteBeeper = (req, res) => {
+    const beeperId = parseInt(req.params.id);
+    jsonfile_1.default.readFile(file, (err, obj) => {
+        if (err) {
+            res.status(500).send(err);
+        }
+        else {
+            const index = obj.findIndex(b => b.id === beeperId);
+            if (index !== -1) {
+                obj.splice(index, 1);
+                jsonfile_1.default.writeFile(file, obj, (err) => {
+                    if (err) {
+                        res.status(500).send(err);
+                    }
+                    else {
+                        res.status(204).send();
+                    }
+                });
+            }
+            else {
+                res.status(404).send('Beeper not found');
+            }
+        }
+    });
+};
+exports.deleteBeeper = deleteBeeper;

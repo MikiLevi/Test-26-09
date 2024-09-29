@@ -9,4 +9,6 @@ router.get('/beepers', beeper_controller_1.getAllBeepers);
 router.post('/beepers', beeper_controller_1.createBeeper);
 // נתיב לקבלת פרטי ביפר לפי מזהה
 router.get('/beepers/:id', beeper_controller_1.getBeeperById);
+// נתיב למחיקת ביפר
+router.delete('/beeper/:id', beeper_controller_1.deleteBeeper);
 exports.default = router;
